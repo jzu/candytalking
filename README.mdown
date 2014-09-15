@@ -1,0 +1,14 @@
+CandyTalking
+============
+
+Just A Minimal Charts script
+----------------------------
+
+Version 1.0
+
+Draws blocks, lines and Bezier curves (and later dots and stacked blocks)
+from a json structure whose name matches a canvas id. Type of graph is
+given by the class name: "blocks", "lines" or "bezier". All sizes, fonts,
+etc. are based on the dimensions of the canvas. Executed automatically
+by default when the page is loaded.
+
