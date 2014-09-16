@@ -363,9 +363,9 @@ window.onload = function () {
           cp [1][1]['Y'] = pt [1]['Y'];
           cp [nbBlocks-1][2] = new Object ();
           cp [nbBlocks-1][2]['X'] = (pt [nbBlocks-1]['X'] 
-                                     + 3 * pt [nbBlocks]['X']) / 4;
+                                     + 3 * cp [nbBlocks-1][1]['X']) / 4;
           cp [nbBlocks-1][2]['Y'] = (pt [nbBlocks]['Y'] 
-                                     + 3 * pt [nbBlocks-1]['Y']) / 4;
+                                     + 3 * cp [nbBlocks-1][1]['Y']) / 4;
         for (j = 2; j <= nbBlocks; j++) {
 
             ctx.bezierCurveTo (cp [j-1][1]['X'], cp [j-1][1]['Y'], 
