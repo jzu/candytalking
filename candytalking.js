@@ -6,7 +6,7 @@
  * Copyright (C) 2014 Jean Zundel <jzu@free.fr> 
  * MIT License: https://github.com/jzu/candytalking/blob/master/LICENSE
  * 
- * Draws blocks, lines, Bezier curves, and later dots and stacked blocks
+ * Draws blocks, lines, Bezier curves, dots, and later stacked blocks,
  * from a json structure whose name matches a canvas id. Type of graph is
  * given by the class name: "blocks", "lines" or "bezier". All sizes, fonts,
  * etc. are based on the dimensions of the canvas. Executed automatically
@@ -56,7 +56,7 @@
  <canvas id="canvas2" class="lines" width="800" height="600">
   Canvas require a real browser
  </canvas>
- <canvas id="canvas3" class="bezier" width="800" height="600">
+ <canvas id="canvas3" class="bezier+dots" width="800" height="600">
   Canvas require a real browser
  </canvas>
 </body>
@@ -153,7 +153,7 @@ window.onload = function () {
     var histName = canvas [h].getAttribute ('id');
     var hist = eval (histName);
     var nbSets = hist.data.length - 1;
-    var nbBlocks = hist.data [0].length - 1;
+    var nbValues = hist.data [0].length - 1;
 
     // Title and text font sizes
 
@@ -174,14 +174,14 @@ window.onload = function () {
  
     // A block contains several values if there are several datasets
 
-    var blockW = (canvas [h].width - marginX * 2 - spaceXAxis) / nbBlocks;
+    var blockW = (canvas [h].width - marginX * 2 - spaceXAxis) / nbValues;
     var blockH = canvas [h].height - marginY * 2 - spaceYAxis - marginTitle;
 
     // Y-axis adjustment
 
     var yMax = 0;
     for (i = 1; i <= nbSets; i++)
-      for (j = 1; j <= nbBlocks; j++)
+      for (j = 1; j <= nbValues; j++)
         yMax = (hist.data [i][j] > yMax) 
                ? hist.data [i][j] 
                : yMax;
@@ -190,7 +190,7 @@ window.onload = function () {
            : 0;
     var yMin = 0;
     for (i = 1; i <= nbSets; i++)
-      for (j = 1; j <= nbBlocks; j++)
+      for (j = 1; j <= nbValues; j++)
         yMin = (hist.data [i][j] < yMin) 
                ? hist.data [i][j] 
                : yMin;
@@ -214,10 +214,11 @@ window.onload = function () {
     ctx.fillText (hist.data [0][0],
                   marginX ,
                   marginY + marginTitle + blockH + spaceYAxis);
-    for (i = 1; i <= nbBlocks; i++) {
+    for (i = 1; i <= nbValues; i++) {
       ctx.fillText (hist.data [0][i],
                     marginX + spaceYAxis + blockW * (i - 1) 
-                    + (blockW - blockW/nbSets + ctx.measureText (hist.data [0][i]).width) / 2,
+                    + (blockW - blockW/nbSets 
+                    + ctx.measureText (hist.data [0][i]).width) / 2,
                     marginY + marginTitle + blockH + spaceYAxis);
     }
 
@@ -318,7 +319,7 @@ window.onload = function () {
       for (i = 1; i <= nbSets; i++) {
         ctx.fillStyle = hist.colors [i];
         ctx.strokeStyle = hist.colors [i];
-        for (j = 1; j <= nbBlocks; j++) 
+        for (j = 1; j <= nbValues; j++) 
           ctx.fillRect (marginX + spaceXAxis + blockW * (j - 1)
                         + (i - 1) * blockW / (nbSets+1),
                         ord0, 
@@ -330,12 +331,12 @@ window.onload = function () {
     if (canvas [h].className.search ("dots") >= 0) {
 
       for (i = 1; i <= nbSets; i++) {
-        for (j = 1; j <= nbBlocks; j++) {
+        for (j = 1; j <= nbValues; j++) {
           drawDot (ctx,
                    marginX + spaceXAxis + blockW * (j - 1) 
                    + (blockW - blockW / nbSets) / 2,
                    ord0 - hist.data [i][j] * blockH / range,
-                   (nbBlocks > 20)
+                   (nbValues > 20)
                    ? textFontSize / 5
                    : textFontSize / 3,
                    hist.colors [i]);
@@ -351,7 +352,7 @@ window.onload = function () {
         ctx.moveTo (marginX + spaceXAxis 
                     + (blockW - blockW / nbSets) / 2,
                     ord0 - hist.data [i][1] * blockH / (yMax - yMin));
-        for (j = 2; j <= nbBlocks; j++) {
+        for (j = 2; j <= nbValues; j++) {
           ctx.lineTo (marginX + spaceXAxis + blockW * (j - 1) 
                       + (blockW - blockW / nbSets) / 2,
                       ord0 - hist.data [i][j] * blockH / range);                        
@@ -363,7 +364,7 @@ window.onload = function () {
 
     if (canvas [h].className.search ("bezier") >= 0) {
 
-      if (nbBlocks >= 3) {
+      if (nbValues >= 3) {
         for (i = 1; i <= nbSets; i++) {
   
           var pt = [];              // Curve points [number] {X|Y}
@@ -373,7 +374,7 @@ window.onload = function () {
                         + (blockW - blockW / nbSets) / 2;
           pt [1]['Y'] = ord0 - hist.data [i][1] * blockH / (yMax - yMin);
   
-          for (j = 2; j <= nbBlocks; j++) {
+          for (j = 2; j <= nbValues; j++) {
   
             pt [j] = new Object ();
             pt [j]['X'] = marginX + spaceXAxis + blockW * (j - 1) 
@@ -388,7 +389,7 @@ window.onload = function () {
           cp [1] = [];
           cp [1][1] = new Object ();
   
-          for (j = 2; j < nbBlocks; j++) {
+          for (j = 2; j < nbValues; j++) {
   
             cp [j-1][2] = new Object ();
             cp [j-1][2]['X'] = (pt [j-1]['X'] + 3 * pt [j]['X']) / 4;
@@ -400,11 +401,11 @@ window.onload = function () {
           }
           cp [1][1]['X'] = pt [1]['X'];
           cp [1][1]['Y'] = pt [1]['Y'];
-          cp [nbBlocks-1][2] = new Object ();
-          cp [nbBlocks-1][2]['X'] = pt [nbBlocks]['X'];
-          cp [nbBlocks-1][2]['Y'] = pt [nbBlocks]['Y'];
+          cp [nbValues-1][2] = new Object ();
+          cp [nbValues-1][2]['X'] = pt [nbValues]['X'];
+          cp [nbValues-1][2]['Y'] = pt [nbValues]['Y'];
 
-          for (j = 2; j <= nbBlocks; j++) {
+          for (j = 2; j <= nbValues; j++) {
 
             ctx.bezierCurveTo (cp [j-1][1]['X'], cp [j-1][1]['Y'], 
                                    cp [j-1][2]['X'], cp [j-1][2]['Y'], 
