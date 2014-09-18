@@ -66,6 +66,31 @@
 
 
 /***************************************************************************
+ * drawDot()
+ *
+ * Draws a coloured dot with a grey circle
+ ***************************************************************************/
+
+function drawDot (ctx, x, y, d, clr) {
+
+  var oldStrokeStyle = ctx.strokeStyle;
+  var oldFillStyle = ctx.fillStyle;
+  ctx.strokeStyle = "#BBBBBB";      // Grey ring around the dot
+  ctx.fillStyle = clr;
+
+  ctx.beginPath ();
+  ctx.arc (x, y, d, 0, Math.PI * 2);
+  ctx.fill ();
+  ctx.closePath ();
+  ctx.stroke ();
+
+  ctx.strokeStyle = oldStrokeStyle;
+  ctx.fillStyle = oldFillStyle;
+}
+
+/*
+function verticalLine () {
+/***************************************************************************
  * verticalLine()
  *
  * Draws a vertical line in light grey
@@ -80,7 +105,8 @@ function verticalLine () {
                   marginY + marginTitle);
       ctx.stroke ();
 }
- */
+*/
+
 /****************************************************************************
  * drawY()
  * 
@@ -112,13 +138,15 @@ function drawY (canvas_h, ctx, i, marginX, scaleY, spaceXAxis) {
 
 window.onload = function () {
 
+  var graphs = [ "blocks", "dots", "lines", "bezier" ];
+
   var canvas = document.getElementsByTagName ("canvas");
 
   for (var h = 0; h < canvas.length; h++) {
 
-    if ((canvas [h].className != "blocks") &&
-        (canvas [h].className != "lines") &&
-        (canvas [h].className != "bezier"))
+    if (! graphs.some (function (v) { 
+                         return canvas [h].className.indexOf (v) >= 0; 
+                       }))
       continue;
 
     var ctx = canvas [h].getContext ("2d");
@@ -269,19 +297,11 @@ window.onload = function () {
 
     for (i = 1; i <= nbSets; i++) {
 
-      ctx.fillStyle = hist.colors [i];
-      ctx.strokeStyle = "#BBBBBB";      // Grey ring around the dot
-
-      ctx.beginPath ();
-      ctx.arc (canvas [h].width - marginX - sMaxWidth - textFontSize * 1.5,
+      drawDot (ctx,
+               canvas [h].width - marginX - sMaxWidth - textFontSize * 1.5,
                marginY + (i - 1) * textFontSize * 1.1 - textFontSize / 2,
                textFontSize * 3 / 7,
-               0,
-               Math.PI * 2);
-      ctx.fill ();
-      ctx.stroke ();
-      ctx.closePath ();
-
+               hist.colors [i]);
       ctx.fillStyle = "black";
       ctx.fillText (hist.data [i][0], 
                     canvas [h].width - marginX - sMaxWidth, 
@@ -293,9 +313,7 @@ window.onload = function () {
     ctx.shadowOffsetX = 5;
     ctx.shadowOffsetY = 5;
 
-    switch (canvas [h].className) {
-
-    case "blocks":
+    if (canvas [h].className.search ("blocks") >= 0) {
 
       for (i = 1; i <= nbSets; i++) {
         ctx.fillStyle = hist.colors [i];
@@ -307,24 +325,43 @@ window.onload = function () {
                         blockW / (nbSets+1),
                         -hist.data [i][j] * blockH / (yMax - yMin));
       }
-      break;                   // blocks
+    }
 
-    case "lines":
+    if (canvas [h].className.search ("dots") >= 0) {
+
+      for (i = 1; i <= nbSets; i++) {
+        for (j = 1; j <= nbBlocks; j++) {
+          drawDot (ctx,
+                   marginX + spaceXAxis + blockW * (j - 1) 
+                   + (blockW - blockW / nbSets) / 2,
+                   ord0 - hist.data [i][j] * blockH / range,
+                   (nbBlocks > 20)
+                   ? textFontSize / 5
+                   : textFontSize / 3,
+                   hist.colors [i]);
+        }
+      }
+    }
+
+    if (canvas [h].className.search ("lines") >= 0) {
 
       for (i = 1; i <= nbSets; i++) {
         ctx.strokeStyle = hist.colors [i];
         ctx.beginPath ();
-        ctx.moveTo (marginX + spaceXAxis,
+        ctx.moveTo (marginX + spaceXAxis 
+                    + (blockW - blockW / nbSets) / 2,
                     ord0 - hist.data [i][1] * blockH / (yMax - yMin));
         for (j = 2; j <= nbBlocks; j++) {
-          ctx.lineTo (marginX + spaceXAxis + blockW * (j - 1),
+          ctx.lineTo (marginX + spaceXAxis + blockW * (j - 1) 
+                      + (blockW - blockW / nbSets) / 2,
                       ord0 - hist.data [i][j] * blockH / range);                        
         }
         ctx.stroke ();
       }
-      break;                  // lines 
+    }
 
-    case "bezier":
+
+    if (canvas [h].className.search ("bezier") >= 0) {
 
       if (nbBlocks >= 3) {
         for (i = 1; i <= nbSets; i++) {
@@ -332,13 +369,15 @@ window.onload = function () {
           var pt = [];              // Curve points [number] {X|Y}
           var cp = [];              // Control points [number] [1st|2nd] {X|Y}
           pt [1] = new Object (); 
-          pt [1]['X'] = marginX + spaceXAxis;
+          pt [1]['X'] = marginX + spaceXAxis 
+                        + (blockW - blockW / nbSets) / 2;
           pt [1]['Y'] = ord0 - hist.data [i][1] * blockH / (yMax - yMin);
   
           for (j = 2; j <= nbBlocks; j++) {
   
             pt [j] = new Object ();
-            pt [j]['X'] = marginX + spaceXAxis + blockW * (j - 1);
+            pt [j]['X'] = marginX + spaceXAxis + blockW * (j - 1) 
+                          + (blockW - blockW / nbSets) / 2;
             pt [j]['Y'] = ord0 - hist.data [i][j] * blockH / range;
           }
   
@@ -374,7 +413,6 @@ window.onload = function () {
           ctx.stroke ();
         }
       }
-      break;                   // "bezier"
     }
   }  
 }
