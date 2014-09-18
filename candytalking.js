@@ -128,7 +128,7 @@ function drawY (canvas_h, ctx, i, marginX, scaleY, spaceXAxis) {
 /****************************************************************************
  * onload() handler
  * 
- * Draws charts in all canvases of class "blocks", "lines and "bezier"
+ * Draws charts in all canvases of class "blocks", "dots", "lines" and "bezier"
  * All dimensions in pixels except yMin, yMax
  *
  * You may want to use this function on demand, for instance if you already
