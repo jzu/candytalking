@@ -314,9 +314,10 @@ window.onload = function () {
     ctx.shadowOffsetX = 5;
     ctx.shadowOffsetY = 5;
 
-    if (canvas [h].className.search ("blocks") >= 0) {
+    for (i = 1; i <= nbSets; i++) {
 
-      for (i = 1; i <= nbSets; i++) {
+      if (canvas [h].className.search ("blocks") >= 0) {
+
         ctx.fillStyle = hist.colors [i];
         ctx.strokeStyle = hist.colors [i];
         for (j = 1; j <= nbValues; j++) 
@@ -326,11 +327,9 @@ window.onload = function () {
                         blockW / (nbSets+1),
                         -hist.data [i][j] * blockH / (yMax - yMin));
       }
-    }
 
-    if (canvas [h].className.search ("dots") >= 0) {
+      if (canvas [h].className.search ("dots") >= 0) {
 
-      for (i = 1; i <= nbSets; i++) {
         for (j = 1; j <= nbValues; j++) {
           drawDot (ctx,
                    marginX + spaceXAxis + blockW * (j - 1) 
@@ -342,11 +341,9 @@ window.onload = function () {
                    hist.colors [i]);
         }
       }
-    }
 
-    if (canvas [h].className.search ("lines") >= 0) {
+      if (canvas [h].className.search ("lines") >= 0) {
 
-      for (i = 1; i <= nbSets; i++) {
         ctx.strokeStyle = hist.colors [i];
         ctx.beginPath ();
         ctx.moveTo (marginX + spaceXAxis 
@@ -359,14 +356,11 @@ window.onload = function () {
         }
         ctx.stroke ();
       }
-    }
 
 
-    if (canvas [h].className.search ("bezier") >= 0) {
+      if (canvas [h].className.search ("bezier") >= 0) {
 
-      if (nbValues >= 3) {
-        for (i = 1; i <= nbSets; i++) {
-  
+        if (nbValues >= 3) {
           var pt = [];              // Curve points [number] {X|Y}
           var cp = [];              // Control points [number] [1st|2nd] {X|Y}
           pt [1] = new Object (); 
