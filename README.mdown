@@ -16,3 +16,20 @@ Executed automatically by default when the page is loaded, being an
 onload() handler. Loadable on demand by renaming it and explicitly 
 calling it from elsewhere.
 
+
+```html
+<script src="https://raw.githubusercontent.com/jzu/candytalking/master/candytalking.js">
+   var example = {
+         "title": "Bezier + Dots",
+         "colors": [ "black", "green", "magenta" ],
+         "data": [
+                   [ "Day", "01/08", "02/08", "03/08", "04/08" ],
+                   [ "Var 1", 1, 2, 3, 4 ],
+                   [ "Var 2", -10, 5, 1, 5 ]
+                 ]
+       };
+</script>
+<canvas id="example" class="bezier+dots" width="800" height="600">
+ Canvas not supported - please use a real browser
+</canvas>
+```
