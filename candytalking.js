@@ -8,9 +8,9 @@
  * 
  * Draws blocks, lines, Bezier curves, dots, and later stacked blocks,
  * from a json structure whose name matches a canvas id. Type of graph is
- * given by the class name: "blocks", "lines" or "bezier". All sizes, fonts,
- * etc. are based on the dimensions of the canvas. Executed automatically
- * by default when the page is loaded.
+ * given by the class name: "blocks", "dots, "lines" or "bezier", or any
+ * combination of them. All sizes, fonts, etc. are based on the dimensions 
+ * of the canvas. Executed automatically by default when the page is loaded.
  * 
  * Example:
 
@@ -24,9 +24,9 @@
  <script>
    var canvas1 = {
          "title": "Blocks",
-         "colors": [ "black", "cyan", "orange" ],
+         "colors": [ "black", "orange", "gold" ],
          "data": [
-                   [ "Day", "01/08", "02/08", "03/08", "04/08" ],
+                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
                    [ "Var 1", 1, 2, 3, 4 ],
                    [ "Var 2", -10, 5, 1, 5 ]
                  ]
@@ -35,26 +35,26 @@
          "title": "Lines",
          "colors": [ "black", "blue", "red" ],
          "data": [
-                   [ "Day", "01/08", "02/08", "03/08", "04/08" ],
+                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
                    [ "Var 1", 1, 2, 3, 4 ],
                    [ "Var 2", -10, 5, 1, 5 ]
                  ]
        };
    var canvas3 = {
-         "title": "Bezier",
+         "title": "Bezier + Dots",
          "colors": [ "black", "green", "magenta" ],
          "data": [
-                   [ "Day", "01/08", "02/08", "03/08", "04/08" ],
+                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
                    [ "Var 1", 1, 2, 3, 4 ],
                    [ "Var 2", -10, 5, 1, 5 ]
                  ]
        };
  </script>
- <canvas id="canvas1" class="blocks" width="800" height="600">
-  Canvas require a real browser
+ <canvas id="canvas1" class="blocks" width="1200" height="500">
+  Canvas requires a real browser
  </canvas>
  <canvas id="canvas2" class="lines" width="800" height="600">
-  Canvas require a real browser
+  Canvas requires a real browser
  </canvas>
  <canvas id="canvas3" class="bezier+dots" width="800" height="600">
   Canvas require a real browser
@@ -99,9 +99,9 @@ function verticalLine () {
 function verticalLine () {
       ctx.strokeStyle = "#DDDDDD";
       ctx.beginPath ();
-      ctx.moveTo (marginX + spaceXAxis + blockW * (i - 1),
-                  marginY + marginTitle + blockH);
-      ctx.lineTo (marginX + spaceXAxis + blockW * (i - 1),
+      ctx.moveTo (marginX + spaceXAxis + valSpW * (i - 1),
+                  marginY + marginTitle + valSpH);
+      ctx.lineTo (marginX + spaceXAxis + valSpW * (i - 1),
                   marginY + marginTitle);
       ctx.stroke ();
 }
@@ -174,8 +174,8 @@ window.onload = function () {
  
     // A block contains several values if there are several datasets
 
-    var blockW = (canvas [h].width - marginX * 2 - spaceXAxis) / nbValues;
-    var blockH = canvas [h].height - marginY * 2 - spaceYAxis - marginTitle;
+    var valSpW = (canvas [h].width - marginX * 2 - spaceXAxis) / nbValues;
+    var valSpH = canvas [h].height - marginY * 2 - spaceYAxis - marginTitle;
 
     // Y-axis adjustment
 
@@ -200,7 +200,7 @@ window.onload = function () {
   
     // Origin on the Y-axis
 
-    var ord0 = marginY + marginTitle + blockH + yMin * blockH / (yMax - yMin);
+    var ord0 = marginY + marginTitle + valSpH + yMin * valSpH / (yMax - yMin);
 
     // Title
 
@@ -213,13 +213,13 @@ window.onload = function () {
     ctx.fillStyle = hist.colors [0];
     ctx.fillText (hist.data [0][0],
                   marginX ,
-                  marginY + marginTitle + blockH + spaceYAxis);
+                  marginY + marginTitle + valSpH + spaceYAxis);
     for (i = 1; i <= nbValues; i++) {
       ctx.fillText (hist.data [0][i],
-                    marginX + spaceYAxis + blockW * (i - 1) 
-                    + (blockW - blockW/nbSets 
+                    marginX + spaceYAxis + valSpW * (i - 1) 
+                    + (valSpW - valSpW/nbSets 
                     + ctx.measureText (hist.data [0][i]).width) / 2,
-                    marginY + marginTitle + blockH + spaceYAxis);
+                    marginY + marginTitle + valSpH + spaceYAxis);
     }
 
 
@@ -235,7 +235,7 @@ window.onload = function () {
            ctx, 
            yMin, 
            marginX, 
-           marginY + marginTitle + blockH, 
+           marginY + marginTitle + valSpH, 
            spaceXAxis);
     drawY (canvas [h], 
            ctx, 
@@ -279,7 +279,7 @@ window.onload = function () {
                ? i.toFixed (-zeroes)   // Bug^H^H^H Implementation detail in JS
                : i, 
                marginX, 
-               marginY + marginTitle + blockH + (yMin-i) * blockH / range,
+               marginY + marginTitle + valSpH + (yMin-i) * valSpH / range,
                spaceXAxis);
         if (i == 0) {
           ctx.strokeStyle = "#CCC";
@@ -314,6 +314,9 @@ window.onload = function () {
     ctx.shadowOffsetX = 5;
     ctx.shadowOffsetY = 5;
 
+
+    // Loop through datasets, then through values, using the specified charts
+
     for (i = 1; i <= nbSets; i++) {
 
       if (canvas [h].className.search ("blocks") >= 0) {
@@ -321,20 +324,20 @@ window.onload = function () {
         ctx.fillStyle = hist.colors [i];
         ctx.strokeStyle = hist.colors [i];
         for (j = 1; j <= nbValues; j++) 
-          ctx.fillRect (marginX + spaceXAxis + blockW * (j - 1)
-                        + (i - 1) * blockW / (nbSets+1),
+          ctx.fillRect (marginX + spaceXAxis + valSpW * (j - 1)
+                        + (i - 1) * valSpW / (nbSets+1),
                         ord0, 
-                        blockW / (nbSets+1),
-                        -hist.data [i][j] * blockH / (yMax - yMin));
+                        valSpW / (nbSets+1),
+                        -hist.data [i][j] * valSpH / (yMax - yMin));
       }
 
       if (canvas [h].className.search ("dots") >= 0) {
 
         for (j = 1; j <= nbValues; j++) {
           drawDot (ctx,
-                   marginX + spaceXAxis + blockW * (j - 1) 
-                   + (blockW - blockW / nbSets) / 2,
-                   ord0 - hist.data [i][j] * blockH / range,
+                   marginX + spaceXAxis + valSpW * (j - 1) 
+                   + (valSpW - valSpW / nbSets) / 2,
+                   ord0 - hist.data [i][j] * valSpH / range,
                    (nbValues > 20)
                    ? textFontSize / 5
                    : textFontSize / 3,
@@ -347,12 +350,12 @@ window.onload = function () {
         ctx.strokeStyle = hist.colors [i];
         ctx.beginPath ();
         ctx.moveTo (marginX + spaceXAxis 
-                    + (blockW - blockW / nbSets) / 2,
-                    ord0 - hist.data [i][1] * blockH / (yMax - yMin));
+                    + (valSpW - valSpW / nbSets) / 2,
+                    ord0 - hist.data [i][1] * valSpH / (yMax - yMin));
         for (j = 2; j <= nbValues; j++) {
-          ctx.lineTo (marginX + spaceXAxis + blockW * (j - 1) 
-                      + (blockW - blockW / nbSets) / 2,
-                      ord0 - hist.data [i][j] * blockH / range);                        
+          ctx.lineTo (marginX + spaceXAxis + valSpW * (j - 1) 
+                      + (valSpW - valSpW / nbSets) / 2,
+                      ord0 - hist.data [i][j] * valSpH / range);                        
         }
         ctx.stroke ();
       }
@@ -365,15 +368,15 @@ window.onload = function () {
           var cp = [];              // Control points [number] [1st|2nd] {X|Y}
           pt [1] = new Object (); 
           pt [1]['X'] = marginX + spaceXAxis 
-                        + (blockW - blockW / nbSets) / 2;
-          pt [1]['Y'] = ord0 - hist.data [i][1] * blockH / (yMax - yMin);
+                        + (valSpW - valSpW / nbSets) / 2;
+          pt [1]['Y'] = ord0 - hist.data [i][1] * valSpH / (yMax - yMin);
   
           for (j = 2; j <= nbValues; j++) {
   
             pt [j] = new Object ();
-            pt [j]['X'] = marginX + spaceXAxis + blockW * (j - 1) 
-                          + (blockW - blockW / nbSets) / 2;
-            pt [j]['Y'] = ord0 - hist.data [i][j] * blockH / range;
+            pt [j]['X'] = marginX + spaceXAxis + valSpW * (j - 1) 
+                          + (valSpW - valSpW / nbSets) / 2;
+            pt [j]['Y'] = ord0 - hist.data [i][j] * valSpH / range;
           }
   
           ctx.strokeStyle = hist.colors [i];
