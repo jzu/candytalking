@@ -10,6 +10,9 @@ Draws blocks, dots, lines and Bezier curves (and later stacked blocks)
 from a json structure whose name matches a canvas id. Type of graph is
 given by the class name: "blocks", "dots", "lines" or "bezier", or any
 combination of them (like "dots+lines"). All sizes, fonts, etc. are 
-based on the dimensions of the canvas. Executed automatically by default 
-when the page is loaded.
+based on the dimensions of the canvas. 
+
+Executed automatically by default when the page is loaded, being an 
+onload() handler. Loadable on demand by renaming it and explicitly 
+calling it from elsewhere.
 
