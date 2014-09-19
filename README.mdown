@@ -18,10 +18,17 @@ calling it from elsewhere.
 
 
 ```html
+<html>
+<head>
+<title>Some Candy Talking</title>
 <script src="https://raw.githubusercontent.com/jzu/candytalking/master/candytalking.js">
+</script>
+</head>
+<body>
+<script>
    var example = {
          "title": "Bezier + Dots",
-         "colors": [ "black", "green", "magenta" ],
+         "colors": [ "black", "red", "orange" ],
          "data": [
                    [ "Day", "01/08", "02/08", "03/08", "04/08" ],
                    [ "Var 1", 1, 2, 3, 4 ],
@@ -32,4 +39,6 @@ calling it from elsewhere.
 <canvas id="example" class="bezier+dots" width="800" height="600">
  Canvas not supported - please use a real browser
 </canvas>
+</body>
+</html>
 ```
