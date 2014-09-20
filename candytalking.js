@@ -1,68 +1,19 @@
-/******************************************************************** 
+/***************************************************************************
  * candytalking.js
  *
  * Just Another Minimal Charts script
+ * https://github.com/jzu/candytalking
  *
  * Copyright (C) 2014 Jean Zundel <jzu@free.fr> 
- * MIT License: https://github.com/jzu/candytalking/blob/master/LICENSE
+ * License: http://opensource.org/licenses/MIT
  * 
  * Draws blocks, lines, Bezier curves, dots, and later stacked blocks,
  * from a json structure whose name matches a canvas id. Type of graph is
  * given by the class name: "blocks", "dots, "lines" or "bezier", or any
  * combination of them. All sizes, fonts, etc. are based on the dimensions 
  * of the canvas. Executed automatically by default when the page is loaded.
- * 
- * Example:
-
-<!DOCTYPE html>
-<html>
-<head>
- <title>Some Candy Talking</title>
- <script src="candytalking.js"></script>
-</head>
-<body>
- <script>
-   var canvas1 = {
-         "title": "Blocks",
-         "colors": [ "black", "orange", "gold" ],
-         "data": [
-                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
-                   [ "Var 1", 1, 2, 3, 4 ],
-                   [ "Var 2", -10, 5, 1, 5 ]
-                 ]
-       };
-   var canvas2 = {
-         "title": "Lines",
-         "colors": [ "black", "blue", "red" ],
-         "data": [
-                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
-                   [ "Var 1", 1, 2, 3, 4 ],
-                   [ "Var 2", -10, 5, 1, 5 ]
-                 ]
-       };
-   var canvas3 = {
-         "title": "Bezier + Dots",
-         "colors": [ "black", "green", "magenta" ],
-         "data": [
-                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
-                   [ "Var 1", 1, 2, 3, 4 ],
-                   [ "Var 2", -10, 5, 1, 5 ]
-                 ]
-       };
- </script>
- <canvas id="canvas1" class="blocks" width="1200" height="500">
-  Canvas requires a real browser
- </canvas>
- <canvas id="canvas2" class="lines" width="800" height="600">
-  Canvas requires a real browser
- </canvas>
- <canvas id="canvas3" class="bezier+dots" width="800" height="600">
-  Canvas require a real browser
- </canvas>
-</body>
-</html>
-
-*/
+ *
+ ***************************************************************************/
 
 
 /***************************************************************************
