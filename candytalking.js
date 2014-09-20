@@ -89,7 +89,7 @@ function drawY (canvas_h, ctx, i, marginX, scaleY, spaceXAxis) {
 
 window.onload = function () {
 
-  var graphs = [ "blocks", "dots", "lines", "bezier" ];
+  var graphs = [ "blocks", "stacked", "dots", "lines", "bezier" ];
 
   var canvas = document.getElementsByTagName ("canvas");
 
@@ -130,25 +130,38 @@ window.onload = function () {
 
     // Y-axis adjustment
 
-    var yMax = 0;
-    for (i = 1; i <= nbSets; i++)
-      for (j = 1; j <= nbValues; j++)
-        yMax = (hist.data [i][j] > yMax) 
-               ? hist.data [i][j] 
-               : yMax;
-    yMax = (yMax > 0) 
-           ? yMax 
-           : 0;
     var yMin = 0;
-    for (i = 1; i <= nbSets; i++)
-      for (j = 1; j <= nbValues; j++)
-        yMin = (hist.data [i][j] < yMin) 
-               ? hist.data [i][j] 
-               : yMin;
-    yMin = (yMin < 0) 
-           ? yMin 
-           : 0;
-  
+    var yMax = 0;
+    if (canvas [h].className.indexOf ("stacked") >= 0) {
+      for (j = 1; j <= nbValues; j++) {
+        var iYMax = 0;
+        for (i = 1; i <= nbSets; i++) {
+          iYMax += hist.data [i][j];      // Sum of values at Y position
+        }
+        yMax = (iYMax > yMax)
+               ? iYMax
+               : yMax;
+      }
+    }
+    else {                                // General case (!stacked)
+      for (i = 1; i <= nbSets; i++)
+        for (j = 1; j <= nbValues; j++)
+          yMax = (hist.data [i][j] > yMax) 
+                 ? hist.data [i][j] 
+                 : yMax;
+      yMax = (yMax > 0) 
+             ? yMax 
+             : 0;
+      for (i = 1; i <= nbSets; i++)
+        for (j = 1; j <= nbValues; j++)
+          yMin = (hist.data [i][j] < yMin) 
+                 ? hist.data [i][j] 
+                 : yMin;
+      yMin = (yMin < 0) 
+             ? yMin 
+             : 0;
+    }
+
     // Origin on the Y-axis
 
     var ord0 = marginY + marginTitle + valSpH + yMin * valSpH / (yMax - yMin);
@@ -265,6 +278,12 @@ window.onload = function () {
     ctx.shadowOffsetX = 5;
     ctx.shadowOffsetY = 5;
 
+    // Keep track of current height for stacked blocks (no negative values)
+
+    var stackH = [];
+    for (j = 1; j <= nbValues; j++)
+      stackH [j] = ord0;
+
 
     // Loop through datasets, then through values, using the specified charts
 
@@ -280,6 +299,29 @@ window.onload = function () {
                         ord0, 
                         valSpW / (nbSets+1),
                         -hist.data [i][j] * valSpH / (yMax - yMin));
+      }
+
+      if (canvas [h].className.search ("stacked") >= 0) {
+
+        var sOX = ctx.shadowOffsetX;  // Shadows don't work for stacked blocks
+        var sOY = ctx.shadowOffsetY;
+        var sB = ctx.shadowBlur;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = hist.colors [i];
+        ctx.strokeStyle = hist.colors [i];
+        for (j = 1; j <= nbValues; j++) {
+          ctx.fillRect (spaceXAxis + valSpW * (j - 1),
+                        stackH [j], 
+                        valSpW * .95,
+                        -hist.data [i][j] * valSpH / (yMax - yMin));
+           stackH [j] -= hist.data [i][j] * valSpH / (yMax - yMin);
+        }
+        ctx.shadowOffsetX = sOX;
+        ctx.shadowOffsetY = sOY;
+        ctx.shadowBlur = sB;
+
       }
 
       if (canvas [h].className.search ("dots") >= 0) {
