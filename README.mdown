@@ -26,17 +26,29 @@ calling it from elsewhere.
 </head>
 <body>
 <script>
-   var example = {
+   var curves = {
          "title": "Bezier + Dots",
          "colors": [ "black", "red", "orange" ],
          "data": [
-                   [ "Day", "01/08", "02/08", "03/08", "04/08" ],
+                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
+                   [ "Var 1", 1, 2, 3, 4 ],
+                   [ "Var 2", -10, 5, 1, 5 ]
+                 ]
+       };
+   var histogram = {
+         "title": "Histogram",
+         "colors": [ "black", "red", "orange" ],
+         "data": [
+                   [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
                    [ "Var 1", 1, 2, 3, 4 ],
                    [ "Var 2", -10, 5, 1, 5 ]
                  ]
        };
 </script>
-<canvas id="example" class="bezier+dots" width="800" height="600">
+<canvas id="curves" class="bezier+dots" width="600" height="500">
+ Canvas not supported - please use a real browser
+</canvas>
+<canvas id="histogram" class="blocks" width="800" height="600">
  Canvas not supported - please use a real browser
 </canvas>
 </body>
