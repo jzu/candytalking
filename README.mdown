@@ -37,7 +37,7 @@ calling it from elsewhere.
        };
    var histogram = {
          "title": "Histogram",
-         "colors": [ "black", "red", "orange" ],
+         "colors": [ "black", "cyan", "green" ],
          "data": [
                    [ "Qty/Day", "01/08", "02/08", "03/08", "04/08" ],
                    [ "Var 1", 1, 2, 3, 4 ],
