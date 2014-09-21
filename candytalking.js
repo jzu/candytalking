@@ -7,11 +7,11 @@
  * Copyright (C) 2014 Jean Zundel <jzu@free.fr> 
  * License: http://opensource.org/licenses/MIT
  * 
- * Draws blocks, lines, Bezier curves, dots, and later stacked blocks,
- * from a json structure whose name matches a canvas id. Type of graph is
- * given by the class name: "blocks", "dots, "lines" or "bezier", or any
- * combination of them. All sizes, fonts, etc. are based on the dimensions 
- * of the canvas. Executed automatically by default when the page is loaded.
+ * Draws blocks, stacked blocks, lines, Bezier curves or dots from a JSON 
+ * structure whose name matches a canvas id. Type of graph is given by the 
+ * class name: "blocks", "dots, "lines" or "bezier", or any combination.
+ * All sizes, fonts, etc. are based on the dimensions of the canvas. 
+ * Executed automatically by default when the page is loaded.
  *
  ***************************************************************************/
 
@@ -289,6 +289,8 @@ window.onload = function () {
 
     for (i = 1; i <= nbSets; i++) {
 
+      // Histograms
+
       if (canvas [h].className.search ("blocks") >= 0) {
 
         ctx.fillStyle = hist.colors [i];
@@ -300,6 +302,8 @@ window.onload = function () {
                         valSpW / (nbSets+1),
                         -hist.data [i][j] * valSpH / (yMax - yMin));
       }
+
+      // Stacked histograms
 
       if (canvas [h].className.search ("stacked") >= 0) {
 
@@ -324,6 +328,8 @@ window.onload = function () {
 
       }
 
+      // Dots
+
       if (canvas [h].className.search ("dots") >= 0) {
 
         for (j = 1; j <= nbValues; j++) {
@@ -337,6 +343,8 @@ window.onload = function () {
                    hist.colors [i]);
         }
       }
+
+      // Straight lines
 
       if (canvas [h].className.search ("lines") >= 0) {
 
@@ -353,6 +361,7 @@ window.onload = function () {
         ctx.stroke ();
       }
 
+      // Bezier curves
 
       if (canvas [h].className.search ("bezier") >= 0) {
 
