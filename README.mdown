@@ -23,7 +23,7 @@ conflicts with other onload() handlers.
 <html>
 <head>
 <title>Some Candy Talking</title>
-<script src="https://raw.githubusercontent.com/jzu/candytalking/v1.0/candytalking.js">
+<script src="https://raw.githubusercontent.com/jzu/candytalking/v1.1/candytalking.js">
 </script>
 </head>
 <body>
