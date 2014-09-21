@@ -4,20 +4,22 @@ CandyTalking
 Just A Minimal Charts script
 ----------------------------
 
-Version 1.0
+Version 1.1
 
-Draws blocks, dots, lines and Bezier curves (and later stacked blocks)
+Draws blocks, stacked blocks, dots, lines and Bezier curves
 from a json structure whose name matches a canvas id. Type of graph is
-given by the class name: "blocks", "dots", "lines" or "bezier", or any
-combination of them (like "dots+lines"). All sizes, fonts, etc. are 
+given by the class name: "blocks", "stacked", "dots", "lines" or "bezier", 
+or any combination of them (like "dots+lines"). All sizes, fonts, etc. are 
 based on the dimensions of the canvas. 
 
-Executed automatically by default when the page is loaded, being an 
-onload() handler. Loadable on demand by renaming it and explicitly 
-calling it from elsewhere.
+Run automatically by default when the page is loaded. Executable on demand 
+by renaming it and explicitly calling it from elsewhere, which allows 
+dynamic resizing of the canvas according to the viewport, or avoiding 
+conflicts with other onload() handlers.
 
 
 ```html
+<!DOCTYPE html>
 <html>
 <head>
 <title>Some Candy Talking</title>
