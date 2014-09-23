@@ -162,6 +162,8 @@ window.onload = function () {
              ? yMin 
              : 0;
     }
+    if ((yMin == 0) && (yMax == 0))
+      yMax = 1;                       // Avoid nonsensical Y-coordinates
 
     // Origin on the Y-axis
 
