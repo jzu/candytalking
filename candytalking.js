@@ -9,7 +9,8 @@
  * 
  * Draws blocks, stacked blocks, lines, Bezier curves or dots from a JSON 
  * structure whose name matches a canvas id. Type of graph is given by the 
- * class name: "blocks", "dots, "lines" or "bezier", or any combination.
+ * class name: "blocks", "stacked, "dots, "lines" or "bezier", or any 
+ * combination of them.
  * All sizes, fonts, etc. are based on the dimensions of the canvas. 
  * Executed automatically by default when the page is loaded.
  *
@@ -79,9 +80,9 @@ function drawY (canvas_h, ctx, i, marginX, scaleY, spaceXAxis) {
 /****************************************************************************
  * onload() handler
  * 
- * Draws charts in all canvases of class "blocks", "dots", "lines" and "bezier"
+ * Draws charts in all canvases of class "blocks", "stacked", "dots", 
+ * "lines", "bezier", and any combination of them (i.e. "lines+dots")
  * All dimensions in pixels except yMin, yMax
- *
  * You may want to use this function on demand, for instance if you already
  * have an onload() handler. In this case, just rename it, and call it
  * explicitely from elsewhere.
@@ -273,8 +274,8 @@ window.onload = function () {
                     marginY + (i - 1) * textFontSize * 1.1 - 2);
     }
 
-    ctx.shadowColor = '#666';
-    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#AAA';
+    ctx.shadowBlur = 10;
     ctx.shadowOffsetX = 5;
     ctx.shadowOffsetY = 5;
 
@@ -307,12 +308,8 @@ window.onload = function () {
 
       if (canvas [h].className.search ("stacked") >= 0) {
 
-        var sOX = ctx.shadowOffsetX;  // Shadows don't work for stacked blocks
-        var sOY = ctx.shadowOffsetY;
-        var sB = ctx.shadowBlur;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.shadowBlur = 0;
+        var sOY = ctx.shadowOffsetY;  // No vertical shadows for stacked blocks
+        ctx.shadowOffsetY = -1;
         ctx.fillStyle = hist.colors [i];
         ctx.strokeStyle = hist.colors [i];
         for (j = 1; j <= nbValues; j++) {
@@ -322,9 +319,7 @@ window.onload = function () {
                         -hist.data [i][j] * valSpH / (yMax - yMin));
            stackH [j] -= hist.data [i][j] * valSpH / (yMax - yMin);
         }
-        ctx.shadowOffsetX = sOX;
         ctx.shadowOffsetY = sOY;
-        ctx.shadowBlur = sB;
 
       }
 
