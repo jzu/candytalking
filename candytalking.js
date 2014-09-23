@@ -226,8 +226,9 @@ window.onload = function () {
         step *= 10;
     }
     else {
-      for (zeroes = 0; step < 2.5; zeroes--)
-        step *= 10;
+      if (range > 0) 
+        for (zeroes = 0; step < 2.5; zeroes--)
+          step *= 10;
       step = 1;
       for (i = 0; i > zeroes; i--)
         step /= 10;
