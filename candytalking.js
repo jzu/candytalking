@@ -250,7 +250,7 @@ window.onload = function () {
                marginY + marginTitle + valSpH + (yMin-i) * valSpH / range,
                spaceXAxis);
         if (i == 0) {
-          ctx.strokeStyle = "#CCC";
+          ctx.strokeStyle = "#888";    // Y = 0
           ctx.stroke ();
           ctx.strokeStyle = greyLine;
         }
@@ -277,10 +277,10 @@ window.onload = function () {
                     marginY + (i - 1) * textFontSize * 1.1 - 2);
     }
 
-    ctx.shadowColor = '#AAA';
+    ctx.shadowColor = '#BBB';
     ctx.shadowBlur = 10;
     ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
+    ctx.shadowOffsetY = 3;
 
     // Keep track of current height for stacked blocks (no negative values)
 
